@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PlayGround — BLACK VECTOR Benchmark</title>
+<style>
+  :root { color-scheme: dark; --bg:#0b1116; --panel:#141d24; --ink:#dfe8ee; --muted:#93a5b1; --accent:#7fd0c2; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--bg); color:var(--ink); }
+  header { padding:28px 24px 8px; max-width:960px; margin:0 auto; }
+  .kicker { color:var(--accent); letter-spacing:.18em; font-size:12px; font-weight:700; }
+  h1 { margin:.3em 0 .2em; font-size:clamp(28px,5vw,52px); line-height:1.05; }
+  p.lede { color:var(--muted); font-size:17px; max-width:62ch; }
+  main { max-width:960px; margin:0 auto; padding:12px 24px 48px; display:grid; gap:16px; }
+  .card { background:var(--panel); border:1px solid #26343e; border-radius:14px; padding:18px 20px; }
+  .card h2 { margin:0 0 8px; font-size:19px; }
+  .card p, .card li { color:var(--muted); font-size:15px; line-height:1.55; }
+  ul { margin:8px 0 0; padding-left:20px; }
+  .grid { display:grid; gap:16px; grid-template-columns:1fr; }
+  @media (min-width:760px){ .grid{ grid-template-columns:1fr 1fr; } }
+  canvas#scene { width:100%; height:240px; display:block; border-radius:10px; background:#0e151b; }
+  .badge { display:inline-block; font-size:12px; font-weight:700; padding:4px 10px; border-radius:999px; background:#1e2d36; color:var(--accent); border:1px solid #2f4550; }
+  footer { max-width:960px; margin:0 auto; padding:0 24px 32px; color:var(--muted); font-size:13px; }
+  a { color:var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <span class="kicker">PLAYGROUND &middot; PLAYABLE BUILD STATUS</span>
+  <h1>BLACK VECTOR &mdash; Independent Benchmark</h1>
+  <p class="lede">Third-person systemic wilderness survival / stealth vertical slice on the island of Vesper.
+    This page is the static deployment preview for the repository; the playable Godot 4.7.2 build lives in
+    <code>black_vector/</code> on branch <code>experiment/black-vector-independent-benchmark</code>.</p>
+</header>
+<main>
+  <div class="card">
+    <h2>Vesper, rendered live <span class="badge">CANVAS</span></h2>
+    <canvas id="scene" width="880" height="240" aria-label="Stylized shoreline scene"></canvas>
+    <p>A tiny procedural shoreline &mdash; water, treeline and cabin light &mdash; drawn by the page itself so the
+      preview renders real pixels with no build step.</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h2>Opening slice</h2>
+      <ul>
+        <li>Awakening &rarr; shoreline &rarr; exposure &rarr; woods</li>
+        <li>Human trace &rarr; cabin &rarr; warmth &rarr; first rest</li>
+        <li>Morning / freedom &rarr; tactical encounter</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Build identity</h2>
+      <ul>
+        <li>Engine: Godot 4.7.2-stable (GL Compatibility)</li>
+        <li>Package: <code>com.blackvector.benchmark</code></li>
+        <li>Branch: <code>experiment/black-vector-independent-benchmark</code></li>
+        <li>Source: <a href="https://github.com/AnonymousNomad/PlayGround">GitHub</a> &middot;
+          <a href="https://omgithub.com/AnonymousNomad/PlayGround">OMGithub</a></li>
+      </ul>
+    </div>
+  </div>
+</main>
+<footer>BLACK VECTOR &middot; INDEPENDENT BENCHMARK &middot; static preview served from <code>dist/</code></footer>
+<script>
+(function () {
+  var c = document.getElementById('scene'), x = c.getContext('2d'), t = 0;
+  function ridge(base, amp, f, color) {
+    x.fillStyle = color; x.beginPath(); x.moveTo(0, 240);
+    for (var px = 0; px <= 880; px += 8) x.lineTo(px, base + Math.sin(px * f + t) * amp);
+    x.lineTo(880, 240); x.closePath(); x.fill();
+  }
+  function frame() {
+    t += 0.02;
+    var g = x.createLinearGradient(0, 0, 0, 240);
+    g.addColorStop(0, '#8fa8b5'); g.addColorStop(.55, '#5d7683'); g.addColorStop(.56, '#22333c'); g.addColorStop(1, '#101a20');
+    x.fillStyle = g; x.fillRect(0, 0, 880, 240);
+    x.fillStyle = '#c8d4da'; x.beginPath(); x.arc(700, 52, 22, 0, 7); x.fill();
+    x.fillStyle = '#1d2b33';
+    for (var i = 0; i < 40; i++) { var tx = (i * 67) % 880, th = 40 + ((i * 37) % 46);
+      x.fillRect(tx, 118 - th, 5, th); x.beginPath(); x.moveTo(tx - 14, 122 - th); x.lineTo(tx + 2.5, 96 - th); x.lineTo(tx + 19, 122 - th); x.closePath(); x.fill(); }
+    ridge(150, 5, .02, '#31434e');
+    x.fillStyle = 'rgba(127,208,194,.9)'; x.fillRect(120, 138, 8, 8);
+    ridge(196, 4, .05, 'rgba(46,78,88,.9)');
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
+</body>
+</html>
